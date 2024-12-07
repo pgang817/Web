@@ -1,33 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stock Market Dashboard</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stock Market Tracker</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
-        <div id="ticker">
-            <!-- Real-time stock index values will be dynamically inserted here -->
-        </div>
-        <h1>USA Stock Market Dashboard</h1>
-    </header>
-    <main>
-        <section id="search">
-            <input type="text" id="stockInput" placeholder="Enter Stock Name or Ticker (e.g., Apple or AAPL)">
-            <button id="searchButton">Search</button>
-        </section>
-        <section id="stockInfo">
-            <h2>Stock Information</h2>
-            <div id="stockDetails">
-                <p>Enter a stock name or ticker to view details.</p>
-            </div>
-        </section>
-    </main>
-    <footer>
-        <p>&copy; 2024 Stock Market Insights</p>
-    </footer>
-    <script src="script.js"></script>
+  <header>
+    <h1>GSP Stock Watcher </h1>
+    <div id="ticker">
+      <span id="dow">Dow: Loading...</span>
+      <span id="sp500">S&P 500: Loading...</span>
+    </div>
+  </header>
+  
+  <main>
+    <section class="search">
+      <h2>Find Stock Prices</h2>
+      <div class="input-container">
+        <input type="text" id="stockInput" placeholder="Enter stock name or symbol">
+        <button id="searchButton">Search</button>
+      </div>
+      <p id="result"></p>
+    </section>
+
+    <section class="stock-list">
+      <h2>Stock Highlights</h2>
+      <p id="rollingStocks">Loading popular stocks...</p>
+    </section>
+  </main>
+
+
+
+  <footer>
+    <p>Pradeep Gangisetti © 2024</p>
+  </footer>
+  <script src="script.js"></script>
 </body>
 </html>
