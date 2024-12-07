@@ -1,67 +1,70 @@
-// Mock stock data for demonstration
-const mockStockData = {
-    AAPL: { name: 'Apple Inc.', price: 150.25, change: '+1.2%' },
-    TSLA: { name: 'Tesla Inc.', price: 600.85, change: '-0.5%' },
-    MSFT: { name: 'Microsoft Corp.', price: 310.10, change: '+0.8%' },
-    AMZN: { name: 'Amazon.com Inc.', price: 3400.50, change: '+0.3%' },
-    GOOG: { name: 'Alphabet Inc.', price: 2800.20, change: '+0.5%' },
-    META: { name: 'Meta Platforms Inc.', price: 330.40, change: '-1.0%' },
-    NVDA: { name: 'NVIDIA Corp.', price: 700.60, change: '+2.4%' },
-    NFLX: { name: 'Netflix Inc.', price: 500.75, change: '+1.8%' },
-    BABA: { name: 'Alibaba Group', price: 210.10, change: '-0.7%' },
-    DIS: { name: 'Walt Disney Co.', price: 185.30, change: '+0.6%' }
-};
+document.addEventListener('DOMContentLoaded', () => {
+  const stockData = [
+    { symbol: "AAPL", name: "Apple Inc.", price: 175.64 },
+    { symbol: "GOOGL", name: "Alphabet Inc.", price: 146.98 },
+    { symbol: "AMZN", name: "Amazon.com Inc.", price: 134.76 },
+    { symbol: "TSLA", name: "Tesla Inc.", price: 252.34 },
+    { symbol: "MSFT", name: "Microsoft Corporation", price: 330.22 },
+    { symbol: "NFLX", name: "Netflix Inc.", price: 427.89 },
+    { symbol: "META", name: "Meta Platforms Inc.", price: 305.67 },
+    { symbol: "NVDA", name: "NVIDIA Corporation", price: 496.53 },
+    { symbol: "BRK.B", name: "Berkshire Hathaway Inc.", price: 355.42 },
+    { symbol: "V", name: "Visa Inc.", price: 242.15 },
+  ];
 
-// Mock data for stock indexes (Nasdaq, S&P 500, Dow Jones)
-const mockIndexData = {
-    NASDAQ: '14,980.00 (+1.15%)',
-    SP500: '4,450.00 (+0.95%)',
-    DOW: '34,950.00 (+0.85%)'
-};
+  const dowElement = document.getElementById('dow');
+  const sp500Element = document.getElementById('sp500');
+  const rollingStocks = document.getElementById('rollingStocks');
+  const stockInput = document.getElementById('stockInput');
+  const searchButton = document.getElementById('searchButton');
+  const resultElement = document.getElementById('result');
 
-function updateTicker() {
-    const ticker = document.getElementById('ticker');
+  // Mock ticker values
+  dowElement.textContent = `Dow: 34856.92`;
+  sp500Element.textContent = `S&P 500: 4567.89`;
+
+  // Rolling stock display (with continuous animation)
+  rollingStocks.innerHTML = stockData.map(stock => `<span class="stock-ticker">${stock.symbol}: $${stock.price}</span>`).join(' • ');
+
+  // Search functionality with voice feedback
+  function searchStock() {
+    const input = stockInput.value.trim().toUpperCase();
+    const stock = stockData.find(item => item.symbol.toUpperCase() === input || item.name.toUpperCase().includes(input));
     
-    // Simulating the rolling ticker with mock data
-    const tickerText = `
-        NASDAQ: ${mockIndexData.NASDAQ} | 
-        S&P 500: ${mockIndexData.SP500} | 
-        DOW JONES: ${mockIndexData.DOW}
-    `;
-    
-    ticker.innerHTML = `<span>${tickerText}</span>`;
-}
-
-function searchStock() {
-    const userInput = document.getElementById('stockInput').value.trim().toUpperCase();
-    const stockDetails = document.getElementById('stockDetails');
-
-    if (!userInput) {
-        stockDetails.innerHTML = '<p>Please enter a stock name or ticker symbol.</p>';
-        return;
-    }
-
-    // Mock stock data lookup
-    const stock = mockStockData[userInput];
-
     if (stock) {
-        stockDetails.innerHTML = `
-            <p><strong>Name:</strong> ${stock.name}</p>
-            <p><strong>Price:</strong> $${stock.price}</p>
-            <p><strong>Change:</strong> ${stock.change}</p>
-        `;
+      const resultText = `${stock.name} (${stock.symbol}): $${stock.price.toFixed(2)}`;
+      resultElement.textContent = resultText;
+      resultElement.style.fontWeight = 'bold'; // Highlight the result
+
+      // Text-to-Speech with support check
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(resultText);
+        speechSynthesis.speak(utterance);
+      } else {
+        console.log("Text-to-Speech not supported");
+      }
     } else {
-        stockDetails.innerHTML = '<p>Stock not found. Try tickers like AAPL, TSLA, or MSFT.</p>';
-    }
-}
+      const errorText = 'Stock not found. Please try another symbol or name.';
+      resultElement.textContent = errorText;
+      resultElement.style.fontWeight = 'normal'; // Remove highlight for error
 
-// Attach event listeners for both click and Enter key
-document.getElementById('searchButton').addEventListener('click', searchStock);
-document.getElementById('stockInput').addEventListener('keydown', function (event) {
+      // Text-to-Speech with support check
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(errorText);
+        speechSynthesis.speak(utterance);
+      } else {
+        console.log("Text-to-Speech not supported");
+      }
+    }
+  }
+
+  // Add event listeners
+  searchButton.addEventListener('click', searchStock);
+
+  // Allow pressing "Enter" to trigger search
+  stockInput.addEventListener('keypress', (event) => {
     if (event.key === 'Enter') {
-        searchStock();
+      searchStock();
     }
+  });
 });
-
-// Update the ticker every 30 seconds (to simulate real-time data)
-setInterval(updateTicker, 30000);
